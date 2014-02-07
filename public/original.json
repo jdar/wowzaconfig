@@ -1,0 +1,11 @@
+{
+  "wowza_client_settings": {
+    "username": "lobzik",
+    "password": "lobzik",
+    "host_address": "192.168.2.40",
+    "port": "1935",
+    "stream": "live/test.stream",
+    "remote_stream_url": "rtsp://192.168.2.40:1935/out/test.stream",
+    "renew_period_min": 2
+  }
+}

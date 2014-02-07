@@ -14,6 +14,8 @@ gem 'unicorn'
 
 group :development, :test do
   gem 'guard-minitest'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 group :test do
@@ -21,7 +23,5 @@ group :test do
   gem 'mocha', '~> 0.14.0', require: false
   gem 'simplecov', require: false
   gem 'coveralls', require: false
-  gem 'better_errors'
-  gem 'binding_of_caller'
   gem 'pry'
 end

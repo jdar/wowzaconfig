@@ -33,12 +33,13 @@ module Api
   class Base < ::Sinatra::Base
     set :root, lambda { |*args| File.join(File.dirname(__FILE__), *args) }
 
-    configure do
-      set :static_cache_control, [:private, max_age: 0, must_revalidate: true]
-
+    configure :development do
       use ::BetterErrors::Middleware
       ::BetterErrors.application_root = __dir__
+    end
 
+    configure do
+      set :static_cache_control, [:private, max_age: 0, must_revalidate: true]
       # Register plugins
       register ::Sinatra::Namespace
 
@@ -51,20 +52,24 @@ module Api
     helpers JsonHelpers
 
     get '/set' do
-      yaml = unless params[:json].strip.empty?
-          YAML.dump(JSON.parse params[:json])
+      json = unless params[:yaml].strip.empty?
+          JSON.dump(YAML.load params[:yaml])
       else
-          params[:yaml] || raise("no content given")
+          params[:json] || raise("no content given")
       end
-      File.open("/tmp/temporary.yaml", "w+") {|f| f.puts yaml }
+      File.open("/tmp/temporary.json", "w+") {|f| f.puts json }
       FileUtils.mkdir_p "public"
-      File.open("public/settings.yaml", "w+") {|f| f.puts yaml }
-      File.open("public/settings.json", "w+") {|f| f.puts JSON.pretty_generate(YAML.load_file "public/temporary.yaml") }
+      File.open("public/settings.json", "w+") {|f| f.puts json }
+      File.open("public/settings.yaml", "w+") {|f| f.puts YAML.dump(JSON.parse json) }
       json({ status: "success" })
     end
 
     get '/get' do
-      json(YAML.load_file "/tmp/temporary.yaml")
+      json(JSON.parse File.read("/tmp/temporary.json"))
+    end
+    get '/reset' do
+      FileUtils.cp("public/original.json", "public/settings.json")
+      json({status: "success"})
     end
 
     namespace '/api/v1' do
