@@ -21,4 +21,7 @@ group :test do
   gem 'mocha', '~> 0.14.0', require: false
   gem 'simplecov', require: false
   gem 'coveralls', require: false
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'pry'
 end
