@@ -1,6 +1,9 @@
 require 'yaml'
 require 'fileutils'
+begin
 require 'better_errors'
+rescue LoadError
+end
 
 ENV['RACK_ENV'] ||= 'development'
 
